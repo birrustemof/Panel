@@ -16,13 +16,12 @@ Route::prefix('news')->name('news.')->group(function () {
 
 // Form route'ları - PageController istifadə edir
 Route::prefix('forms')->name('forms.')->group(function () {
-    Route::get('general/{id}', [newsController::class, 'show'])->name('general');
-    Route::put('general/{id}', [newsController::class, 'update'])->name('general.update'); // YENİ
-
+    Route::get('general/{id}', [NewsController::class, 'show'])->name('general');
+    Route::put('general/{id}', [NewsController::class, 'update'])->name('general.update');
 });
 
-// Digər route'lar - PageController istifadə edir
-Route::get("simple", [newsController::class, 'news'])->name('simple');
+// Digər route'lar
+Route::get("simple", [NewsController::class, 'news'])->name('simple');
 Route::get("", [PageController::class, 'index'])->name('index');
 Route::get("index2", [PageController::class, 'index2'])->name('index2');
 Route::get("index3", [PageController::class, 'index3'])->name('index3');
