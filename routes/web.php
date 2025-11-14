@@ -26,7 +26,11 @@ Route::get("simple", [newsController::class, 'news'])->name('simple');
 Route::get("", [PageController::class, 'index'])->name('index');
 Route::get("index2", [PageController::class, 'index2'])->name('index2');
 Route::get("index3", [PageController::class, 'index3'])->name('index3');
-Route::get('/xeber2', [PageController::class, 'xeber2'] )->name('xeber2');
-
+Route::get('/xeber2', [PageController::class, 'xeber2'])->name('xeber2');
+// Axtarış route-u
+// web.php faylına əlavə edin
+Route::get('/Search', function () {
+    return view('Search');
+})->name('Search.page');
 
 
