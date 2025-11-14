@@ -2,40 +2,59 @@
 @section('body')
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row w-100">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-8 mx-auto">
+                <!-- Xəbəri yeniləmək üçün form -->
                 <div class="card card-danger card-outline">
                     <div class="card-header">
-                        <div class="card-title">Xəbər Məlumatları</div>
+                        <h3 class="card-title">Xəbəri Yenilə</h3>
                     </div>
-
-                    <!-- Success mesajı -->
-                    @if(session('success'))
-                        <div class="alert alert-success m-3">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('forms.general.update', $newsItem->id) }}">
+                    <form method="POST" action="{{ route('forms.general.update', $newsItem->id) }}" id="updateForm">
                         @csrf
                         @method('PUT')
                         <div class="card-body">
+                            @if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <div class="mb-3">
-                                <label for="newsId" class="form-label">Id</label>
-                                <input type="text" class="form-control" id="newsId" value="{{ $newsItem->id }}" readonly>
-                                <div class="form-text">Xəbərin ID nömrəsi</div>
+                                <label for="title" class="form-label">Title <small class="text-muted">(ən az 15 xarakter)</small></label>
+                                <input type="text" class="form-control" id="title" name="title"
+                                       value="{{ old('title', $newsItem->title) }}"
+                                       placeholder="Xəbərin başlığını daxil edin">
+                                <div class="form-text">
+                                    <span id="titleCount">{{ strlen($newsItem->title) }}</span>/255 xarakter (minimum 15)
+                                </div>
+                                <div class="invalid-feedback" id="titleError">
+                                    Title ən az 15 xarakter olmalıdır
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label for="newsTitle" class="form-label">Title</label>
-                                <input type="text" class="form-control" id="newsTitle" name="title" value="{{ $newsItem->title }}">
-                            </div>
-                            <div class="mb-4">
-                                <label for="newsText" class="form-label">Text</label>
-                                <textarea class="form-control" id="newsText" name="text" rows="4">{{ $newsItem->text }}</textarea>
+                                <label for="text" class="form-label">Text <small class="text-muted">(ən az 10 xarakter)</small></label>
+                                <textarea class="form-control" id="text" name="text" rows="5"
+                                          placeholder="Xəbərin mətnini daxil edin">{{ old('text', $newsItem->text) }}</textarea>
+                                <div class="form-text">
+                                    <span id="textCount">{{ strlen($newsItem->text) }}</span> xarakter (minimum 10)
+                                </div>
+                                <div class="invalid-feedback" id="textError">
+                                    Text ən az 10 xarakter olmalıdır
+                                </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-danger">Yenilə</button>
-                            <a href="{{ url()->previous() }}" class="btn btn-secondary">Geri</a>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{{ route('xeber2') }}" class="btn btn-secondary">Geri</a>
+                            <button type="submit" class="btn btn-danger" id="updateBtn">Xəbəri Yenilə</button>
                         </div>
                     </form>
                 </div>

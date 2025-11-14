@@ -32,4 +32,7 @@ class PageController extends Controller
         $news = News::all(); // Xəbərləri çək
         return view('xeber2', compact('news')); // news dəyişənini göndər
     }
+
+
+
 }

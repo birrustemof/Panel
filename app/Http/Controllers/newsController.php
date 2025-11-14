@@ -22,8 +22,8 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'text' => 'required|string'
+            'title' => 'required|string|min:15|max:255',
+            'text' => 'required|string|min:10'
         ]);
 
         News::create([
@@ -40,8 +40,8 @@ class NewsController extends Controller
         $newsItem = News::findOrFail($id);
 
         $request->validate([
-            'title' => 'required|string|max:255',
-            'text' => 'required|string'
+            'title' => 'required|string|min:15|max:255',
+            'text' => 'required|string|min:10'
         ]);
 
         $newsItem->update([
@@ -52,4 +52,16 @@ class NewsController extends Controller
         return redirect()->route('forms.general', $id)
             ->with('success', 'Xəbər uğurla yeniləndi!');
     }
+
+    // YENİ: Xəbər silmək üçün
+    public function destroy($id)
+    {
+        $newsItem = News::findOrFail($id);
+        $newsItem->delete();
+
+        return redirect()->route('xeber2')
+            ->with('success', 'Xəbər uğurla silindi!');
+    }
+
+
 }
