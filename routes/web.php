@@ -33,4 +33,5 @@ Route::get('/Search', function () {
     return view('Search');
 })->name('Search.page');
 
-
+// Axtarış API route-u
+Route::get('/Search-news', [NewsController::class, 'Search'])->name('news.Search');
