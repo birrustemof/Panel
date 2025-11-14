@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 // Xəbər route'ları
 Route::prefix('news')->name('news.')->group(function () {
-    Route::get('/', [newsController::class, 'news'])->name('index');
+    Route::get('/', [NewsController::class, 'news'])->name('index');
     Route::post('/store', [NewsController::class, 'store'])->name('store');
     Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy'); // YENİ
 });
