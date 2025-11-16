@@ -29,8 +29,8 @@ class PageController extends Controller
 
     public function xeber2()
     {
-        $news = News::all(); // Xəbərləri çək
-        return view('xeber2', compact('news')); // news dəyişənini göndər
+        $news = News::orderBy('created_at', 'desc')->paginate(10);
+        return view('xeber2', compact('news'));
     }
 
 

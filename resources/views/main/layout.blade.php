@@ -283,16 +283,17 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('news.index') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Xeber siyahısı</p>
-                                </a>
-                            </li>
+
                             <li class="nav-item">
                                 <a href="{{ route('xeber2') }}" class="nav-link">  <!-- route('xeber2') istifadə et -->
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Xeber add</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('news.index') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Xeber siyahısı</p>
                                 </a>
                             </li>
                         </ul>
