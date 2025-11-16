@@ -22,7 +22,7 @@ class NewsController extends Controller
         } else {
             $news = News::orderBy('created_at', 'desc')->paginate(10);
         }
-
+        return view('tables.simple', compact('news', 'search'));
 
     }
 
