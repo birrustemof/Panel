@@ -7,9 +7,22 @@ use App\Models\News;
 
 class NewsController extends Controller
 {
-    public function news(){
-        $news = News::all();
-        return view('tables.simple', compact('news'));
+    public function news(Request $request)
+    {
+        $search = $request->get('search');
+
+        if ($search) {
+            $news = News::where('title', 'like', '%' . $search . '%')
+                ->orWhere('text', 'like', '%' . $search . '%')
+                ->orWhere('author', 'like', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10)
+                ->appends(['search' => $search]); // ƏLAVƏ EDİN
+        } else {
+            $news = News::orderBy('created_at', 'desc')->paginate(10);
+        }
+
+        return view('tables.simple', compact('news', 'search'));
     }
 
     public function show($id)
