@@ -23,7 +23,7 @@ class NewsController extends Controller
             $news = News::orderBy('created_at', 'desc')->paginate(10);
         }
 
-        return view('tables.simple', compact('news', 'search'));
+
     }
 
     public function show($id)
