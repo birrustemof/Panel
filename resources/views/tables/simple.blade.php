@@ -139,7 +139,7 @@
                             </tbody>
                         </table>
 
-                        <!-- Pagination - DÜZƏLDİLMİŞ HİSSƏ -->
+                        <!-- Pagination  -->
                         @if(isset($news) && $news->hasPages())
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="text-muted">

@@ -10,20 +10,20 @@ class NewsController extends Controller
 {
     public function news(Request $request)
     {
-        $search = $request->get('search');
+        $search = $request->search;
 
-        if ($search) {
-            $news = News::where('title', 'like', '%' . $search . '%')
-                ->orWhere('text', 'like', '%' . $search . '%')
-                ->orWhere('author', 'like', '%' . $search . '%')
-                ->orderBy('created_at', 'desc')
-                ->paginate(10)
-                ->appends(['search' => $search]); // ƏLAVƏ EDİN
-        } else {
-            $news = News::orderBy('created_at', 'desc')->paginate(10);
-        }
+        $news = News::latest()
+            ->when($search, function($query, $search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('text', 'like', "%{$search}%")
+                        ->orWhere('author', 'like', "%{$search}%");
+                });
+            })
+            ->paginate(10)
+            ->appends($request->only('search'));
+
         return view('tables.simple', compact('news', 'search'));
-
     }
 
     public function show($id)
@@ -178,44 +178,55 @@ class NewsController extends Controller
             ->with('success', 'Xəbər uğurla silindi!');
     }
 
-    // Silinmiş xəbərləri göstər
     public function deletedNews()
     {
         $deletedNews = News::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
         return view('tables.deleted-news', compact('deletedNews'));
     }
 
-    // Xəbəri bərpa et
+    // Xəbəri bərpa et - DÜZƏLİŞ EDİLDİ
     public function restore($id)
     {
         $news = News::onlyTrashed()->findOrFail($id);
         $news->restore();
 
-        return redirect()->route('news.deleted')
-            ->with('success', 'Xəbər uğurla bərpa edildi!');
+        return redirect()->route('news.deleted') // DÜZƏLDİ: 'deleted.news' -> 'news.deleted'
+        ->with('success', 'Xəbər uğurla bərpa edildi!');
     }
 
-    // Xəbəri həqiqətən sil (database-dən)
     public function forceDelete($id)
     {
-        $news = News::onlyTrashed()->findOrFail($id);
+        try {
+            $news = News::onlyTrashed()->findOrFail($id);
 
-        // Şəkili sil
-        if ($news->image) {
-            Storage::disk('public')->delete($news->image);
+            // Şəkili sil
+            if ($news->image) {
+                Storage::disk('public')->delete($news->image);
+            }
+
+            $news->forceDelete();
+
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Xəbər həqiqətən silindi!'
+                ]);
+            }
+
+            return redirect()->route('news.deleted')
+                ->with('success', 'Xəbər həqiqətən silindi!');
+
+        } catch (\Exception $e) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Xəta: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('news.deleted')
+                ->with('error', 'Xəta baş verdi: ' . $e->getMessage());
         }
-
-        $news->forceDelete();
-
-        if (request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Xəbər həqiqətən silindi!'
-            ]);
-        }
-
-        return redirect()->route('news.deleted')
-            ->with('success', 'Xəbər həqiqətən silindi!');
     }
 
     // Excel export metodu
@@ -276,4 +287,7 @@ class NewsController extends Controller
     {
         return $this->update($request, $id);
     }
+
+
+
 }

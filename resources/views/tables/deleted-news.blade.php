@@ -59,8 +59,10 @@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <!-- Bərpa et button -->
+                                                <!-- Bərpa et form -->
                                                 <form action="{{ route('news.restore', $item->id) }}" method="POST" style="display: inline;">
                                                     @csrf
+                                                    <!-- @method('PATCH') SİLİN -->
                                                     <button type="submit" class="btn btn-success btn-sm" title="Bərpa et">
                                                         <i class="fas fa-undo"></i> Bərpa et
                                                     </button>
@@ -131,24 +133,30 @@
                     const newsTitle = this.getAttribute('data-title');
 
                     forceNewsTitleSpan.textContent = newsTitle;
-                    forceDeleteForm.action = `/news/force-delete/${newsId}`;
 
+                    // URL-i DÜZGÜN qururuq
+                    const baseUrl = "{{ route('news.forceDelete', ['id' => 'PLACEHOLDER']) }}";
+                    forceDeleteForm.action = baseUrl.replace('PLACEHOLDER', newsId);
+
+                    console.log('Form action:', forceDeleteForm.action); // Debug üçün
                     forceDeleteModal.show();
                 });
             });
 
-            // AJAX force delete with page refresh
+            // AJAX force delete - YENİ VERSİYA
             forceDeleteForm.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const form = this;
                 const url = form.action;
 
+                console.log('Sending request to:', url); // Debug üçün
+
                 fetch(url, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -156,18 +164,29 @@
                     })
                 })
                     .then(response => {
+                        console.log('Response status:', response.status); // Debug üçün
                         if (response.ok) {
-                            // Close modal
-                            forceDeleteModal.hide();
-                            location.reload(); // Səhifəni yenilə
+                            return response.json();
                         } else {
-                            throw new Error('Silinmə əməliyyatı uğursuz oldu');
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.message || 'Network response was not ok');
+                            });
+                        }
+                    })
+                    .then(data => {
+                        console.log('Success data:', data); // Debug üçün
+                        if (data.success) {
+                            forceDeleteModal.hide();
+                            alert('Xəbər uğurla silindi!');
+                            location.reload();
+                        } else {
+                            throw new Error(data.message || 'Silinmə uğursuz oldu');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         forceDeleteModal.hide();
-                        alert('Xəta baş verdi!');
+                        alert('Xəta baş verdi: ' + error.message);
                     });
             });
         });

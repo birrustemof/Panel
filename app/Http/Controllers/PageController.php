@@ -27,6 +27,8 @@ class PageController extends Controller
         return view('dashboard.index3');
     }
 
+
+
     public function xeber2()
     {
         $news = News::orderBy('created_at', 'desc')->paginate(10);
