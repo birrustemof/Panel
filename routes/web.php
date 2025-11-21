@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MuellifController;
+use App\Http\Controllers\AuthorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,9 +37,18 @@ Route::get("index3",                     [PageController::class, 'index3'])->nam
 Route::get('/xeber2',                    [PageController::class, 'xeber2'])->name('xeber2');
 // Kateqoriya route'ları
 
-Route::get('/Katoqoriya-new', [CategoryController::class, 'KatoqoriyaNew'])->name('tables/Katoqoriya-new');
-Route::get('/Katoqoriya-list', [CategoryController::class, 'KatoqoriyaList'])->name('tables/Katoqoriya-list');
-Route::get('/katoqoriya-new', [CategoryController::class, 'KatoqoriyaNew'])->name('katoqoriya.new');
-Route::get('/katoqoriya-list', [CategoryController::class, 'KatoqoriyaList'])->name('katoqoriya.list');
-Route::post('/category/store', [CategoryController::class, 'store'])->name('category.store');
+Route::get('/Katoqoriya-new',           [CategoryController::class, 'KatoqoriyaNew'])->name('tables/Katoqoriya-new');
+Route::get('/Katoqoriya-list',          [CategoryController::class, 'KatoqoriyaList'])->name('tables/Katoqoriya-list');
+Route::get('/katoqoriya-new',           [CategoryController::class, 'KatoqoriyaNew'])->name('tables/katoqoriya.new');
+Route::get('/katoqoriya-list',          [CategoryController::class, 'KatoqoriyaList'])->name('tables/katoqoriya.list');
+Route::post('/category/store',          [CategoryController::class, 'store'])->name('category.store');
+
+// routes/web.php
+// routes/web.php
+Route::get('/muellifad', [AuthorController::class, 'muellifadd'])->name('muellif.add');
+Route::post('/muellifad', [AuthorController::class, 'store'])->name('muellif.store');
+Route::get('/muelliflist', [MuellifController::class, 'muelliflist'])->name('muellif.list');
+
+
+
 

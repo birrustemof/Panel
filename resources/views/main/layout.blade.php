@@ -322,6 +322,38 @@
                                     <p>Kateqoriyaların siyahısı</p>
                                 </a>
                             </li>
+
+
+                        </ul>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-table"></i>
+                            <p>
+                                Müəllif
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            <li class="nav-item">
+                                <a href="{{ route('muellif.add') }}" class="nav-link">
+
+                                <i class="nav-icon bi bi-circle"></i>
+                                    <p>Müəllif add</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('muellif.list') }}" class="nav-link">
+
+                                <i class="nav-icon bi bi-circle"></i>
+                                    <p>Müəllif cədvəli</p>
+                                </a>
+                            </li>
+
+
                         </ul>
                     </li>
 

@@ -85,12 +85,14 @@
                                     <tr class="align-middle" id="news-row-{{ $item->id }}">
                                         <td>{{ $startNumber + $index }}</td>
                                         <td>
-                                            @if($item->image)
+                                            @if($item->image && file_exists(storage_path('app/public/' . $item->image)))
                                                 <img src="{{ asset('storage/' . $item->image) }}"
                                                      alt="{{ $item->title }}"
                                                      style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                                             @else
-                                                <span class="text-muted" style="font-size: 12px;">Şəkil yoxdur</span>
+                                                <span class="text-muted" style="font-size: 12px;">
+                                                    {{ $item->image ? 'Şəkil tapılmadı' : 'Şəkil yoxdur' }}
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
